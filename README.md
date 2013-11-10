@@ -76,6 +76,48 @@ if fs.exists cookies_file
 casper.userAgent 'Mozilla/5.0 (iPhone; CPU iPhone OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A403 Safari/8536.25'
 ```
 
+## Jenkins連携
+
+テスト結果出力にxUnitフォーマットが対応しているのでそれを利用する
+
+```bash
+$ casperjs test googletesting.coffee --xunit=result.xml 
+```
+
+## テストのイベント処理
+
+テスト時には以下のイベントが取得できる
+
+- `success` - 成功
+- `fail` - 失敗
+- `skipped` - スキップ
+
+### 例）テスト失敗時に`dump`する
+
+```coffeescript
+casper.test.on 'fail', (result) ->
+    require('utils').dump result
+```
+
+`result`にはテスト結果やテスト実施したファイルが設定されています
+
+```json
+{
+    "success": false,
+    "type": "assertEquals",
+    "standard": "Subject equals the expected value",
+    "file": "test.coffee",
+    "doThrow": true,
+    "values": {
+        "subject": 1,
+        "expected": 2
+    },
+    "line": 9,
+    "suite": "test",
+    "time": 60
+}
+```
+
 ## 画面キャプチャ
 
 [casper.capture](http://casperjs.readthedocs.org/en/latest/modules/casper.html#capture)を利用する
@@ -88,14 +130,6 @@ casper.test.on 'fail', ->
 ```
 
 背景色のやつを後で記述
-
-## Jenkins連携
-
-テスト結果出力にxUnitフォーマットが対応しているのでそれを利用する
-
-```bash
-$ casperjs test googletesting.coffee --xunit=result.xml 
-```
 
 ## Links（参考にしたサイトなど）
 
